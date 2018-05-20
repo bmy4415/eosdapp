@@ -1,10 +1,65 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import * as Eos from 'eosjs';
 import ecc from 'eosjs-ecc';
+import ipfs from './ipfs.js';
+import { Grid, Form, Button } from 'react-bootstrap';
+
 
 class App extends Component {
+
+	state = {
+		ipfsHash:null,
+		buffer:'',
+	};
+
+	onSubmit = async (event) => {
+		event.preventDefault();
+		//bring in user's metamask account address
+		//const accounts = await web3.eth.getAccounts();
+
+		//console.log('Sending from Metamask account: ' + accounts[0]);
+		//obtain contract address from storehash.js
+		//const ethAddress= await storehash.options.address;
+		//this.setState({ethAddress});
+		//save document to IPFS,return its hash#, and set hash# to state
+		//https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/FILES.md#add 
+		await ipfs.add(this.state.buffer, (err, ipfsHash) => {
+			console.log(err,ipfsHash);
+			//setState by setting ipfsHash to ipfsHash[0].hash 
+			this.setState({ ipfsHash:ipfsHash[0].hash });
+			console.log(this.state);
+			
+			// call Ethereum contract method "sendHash" and .send IPFS hash to etheruem contract 
+			//return the transaction hash from the ethereum contract
+			//see, this https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#methods-mymethod-send
+
+//			storehash.methods.sendHash(this.state.ipfsHash).send({
+//				from: accounts[0] 
+//			}, (error, transactionHash) => {
+//				console.log(transactionHash);
+//				this.setState({transactionHash});
+//			}); //storehash 
+		}) //await ipfs.add 
+	}; //onSubmit
+
+
+
+	captureFile = (event) => {
+		event.stopPropagation()
+		event.preventDefault()
+		const file = event.target.files[0]
+		let reader = new window.FileReader()
+		reader.readAsArrayBuffer(file)
+		reader.onloadend = () => this.convertToBuffer(reader)    
+	};
+
+	convertToBuffer = async (reader) => {
+		//file is converted to a buffer for upload to IPFS
+		const buffer = await Buffer.from(reader.result);
+		//set this buffer -using es6 syntax
+		this.setState({buffer});
+	};
 
 	randomAccountName() {
 		const size = 12;
@@ -18,9 +73,10 @@ class App extends Component {
 		this.scatter.suggestNetwork(this.network).then(() => {
 			ecc.randomKey().then(privateKey => {
 				const publicKey = ecc.privateToPublic(privateKey);
+				const accountName = this.randomAccountName();
 				console.log(privateKey);
 				console.log(publicKey);
-				const accountName = this.randomAccountName();
+				console.log(accountName);
 				const stakerName = process.env.REACT_APP_ACCOUNT_NAME;
 				const keyProvider = process.env.REACT_APP_PRIVATE_KEY;
 				const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
@@ -33,6 +89,11 @@ class App extends Component {
 					recovery: stakerName,
 					deposit: `1 EOS`
 				}).then(account => {
+					this.scatter.getIdentity({ accounts:[this.network] })
+						.then(id => {
+							console.log(this.scatter)
+							console.log(this.network)
+							console.log(id)});
 					/*   
 					   setTimeout(() => {
 					   eos.contract('eosio.token').then(contract => {
@@ -67,29 +128,38 @@ class App extends Component {
 			});			
 
 			this.createAccount();
-			this.scatter.getIdentity({ accounts:[this.network] })
-				.then(id => {this.id = id});
-			console.log(this.id);
-
 		})
 		return;
 	}
 
 
-  render() {
-    this.logic();
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+	render() {
+    	this.logic();
+		return (
+			<div className="App">
+				<header className="App-header">
+					<h1> IPFS with Create React App</h1>
+				</header>
+				<hr />
+				<Grid>
+					<h3> Choose file to send to IPFS </h3>
+					<Form onSubmit={this.onSubmit}>
+						<input 
+						type = "file"
+						onChange = {this.captureFile}
+						/>
+						<Button 
+						bsStyle="primary" 
+						type="submit"> 
+						Send it 
+						</Button>
+					</Form>
+				<hr/>
+				</Grid>
+			</div>
+		);
+	} //render
+
 }
 
 export default App;

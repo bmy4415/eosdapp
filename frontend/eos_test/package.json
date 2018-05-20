@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.1.1",
     "eosjs": "^8.0.1",
+    "fs-extra": "^6.0.1",
+    "ipfs-api": "^21.0.0",
     "react": "^16.3.2",
+    "react-bootstrap": "^0.32.1",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4"
   },
