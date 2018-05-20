@@ -4,42 +4,25 @@ import * as Eos from 'eosjs';
 import ecc from 'eosjs-ecc';
 import ipfs from './ipfs.js';
 import { Grid, Form, Button } from 'react-bootstrap';
-
+import GetFileIpfs from './GetFileIpfs.js';
+import { Dimmer, Loader } from 'semantic-ui-react'
 
 class App extends Component {
 
 	state = {
 		ipfsHash:null,
 		buffer:'',
+		busy:false,
 	};
 
 	onSubmit = async (event) => {
 		event.preventDefault();
-		//bring in user's metamask account address
-		//const accounts = await web3.eth.getAccounts();
-
-		//console.log('Sending from Metamask account: ' + accounts[0]);
-		//obtain contract address from storehash.js
-		//const ethAddress= await storehash.options.address;
-		//this.setState({ethAddress});
-		//save document to IPFS,return its hash#, and set hash# to state
-		//https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/FILES.md#add 
+		this.setState({busy:true});
 		await ipfs.add(this.state.buffer, (err, ipfsHash) => {
 			console.log(err,ipfsHash);
-			//setState by setting ipfsHash to ipfsHash[0].hash 
 			this.setState({ ipfsHash:ipfsHash[0].hash });
 			console.log(this.state);
-			
-			// call Ethereum contract method "sendHash" and .send IPFS hash to etheruem contract 
-			//return the transaction hash from the ethereum contract
-			//see, this https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#methods-mymethod-send
-
-//			storehash.methods.sendHash(this.state.ipfsHash).send({
-//				from: accounts[0] 
-//			}, (error, transactionHash) => {
-//				console.log(transactionHash);
-//				this.setState({transactionHash});
-//			}); //storehash 
+			this.setState({busy:false});
 		}) //await ipfs.add 
 	}; //onSubmit
 
@@ -134,12 +117,17 @@ class App extends Component {
 
 
 	render() {
-    	this.logic();
+    	//this.logic();
 		return (
 			<div className="App">
+				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
 				<header className="App-header">
 					<h1> IPFS with Create React App</h1>
 				</header>
+					{ this.state.busy ? <Dimmer active>
+					<Loader size="big" inline="centered" content="Loading.."/>
+				</Dimmer> : null }
+				
 				<hr />
 				<Grid>
 					<h3> Choose file to send to IPFS </h3>
@@ -156,6 +144,10 @@ class App extends Component {
 					</Form>
 				<hr/>
 				</Grid>
+
+				<GetFileIpfs/>
+
+
 			</div>
 		);
 	} //render
