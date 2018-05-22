@@ -1,0 +1,102 @@
+/**
+ *  @file
+ *  @copyright defined in eos/LICENSE.txt
+ */
+#include <music.hpp>
+#include <eosiolib/eosio.hpp>
+
+using namespace eosio;
+using namespace std;
+  
+class musicDapp : public eosio::contract {
+  public:
+      using contract::contract;
+
+	  typedef uint64_t intString;
+      // @abi action
+
+	  void addmusic( intString music_name, intString singer, intString ipfs_hash, account_name identity_account ) {
+		  TABLE_Musics _musics(_self, _self);
+
+		  auto record = _musics.find( ipfs_hash );
+		  if(record == _musics.end())
+		  {
+			  _musics.emplace( identity_account, [&]( auto& a ) {
+					  a.music_name = music_name;
+					  a.singer = singer;
+					  a.ipfs_hash = ipfs_hash;
+					  a.identity_account = identity_account;
+					  });
+			  eosio::print("======== music added! ========\n");
+
+			  eosio::print("=== music_name : ", eosio::name{music_name }," ===\n");
+		  }
+		  else
+		  { 
+			  eosio::print("======== addmusic error ========\n");
+
+			  eosio::print("======== ipfs hash already exist! ========\n");
+
+		  }			 
+
+	  }
+
+
+//////// !!! this action may not be necessary !!!!
+//////////// eosjs has great method, "get_table_rows".
+	  void searchmusic(intString music_name)
+	  {
+		  TABLE_Musics _musics(_self, _self);
+
+		  auto music_name_index = _musics.get_index<N(bymusicname)>();
+
+		  auto music_itr = music_name_index.find(music_name);
+		  int count = 1;
+		  
+		  eosio::print("======== search result ========\n");
+		 while (music_itr != music_name_index.end() && music_itr->music_name == music_name && count < 100) {
+			  // need some logic to make formed string, such as JSON, xml.
+			  eosio::print("=== ",
+					  count,
+					  name{music_name},
+					  name{music_itr->singer},
+			 		  name{music_itr->ipfs_hash},
+					  " ===\n");
+
+			  ++music_itr;
+			  count++;
+		  } 
+
+	  }
+
+  private:
+	  /***
+	   * Structs
+	   ****************************************************/
+
+	  // @abi table music i64
+	  struct music {
+
+	// multi index doesn't provide string as secondary index.
+	// so to use music_name as secondary index, type must be uint64.	
+		  intString music_name;
+		  intString singer;
+		  intString ipfs_hash;
+		  account_name identity_account;
+
+		  uint64_t primary_key()const { return ipfs_hash; }
+	  	  intString bymusicname()const { return music_name; }
+		  
+		  EOSLIB_SERIALIZE( music, (music_name)(singer)(ipfs_hash)(identity_account) )
+	  };
+
+
+	  /***
+	   * Tables
+	   ****************************************************/
+	
+	  typedef multi_index<N(music), music, indexed_by< N(bymusicname), const_mem_fun<music, intString, &music::bymusicname> >> TABLE_Musics;
+
+};
+
+EOSIO_ABI( musicDapp, (addmusic)(searchmusic) )

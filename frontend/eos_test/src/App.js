@@ -92,6 +92,48 @@ class App extends Component {
 		return;
 	}
 
+	searchMusics(){
+
+		const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
+		const eos = Eos.Localnet({httpEndpoint:httpEndpoint});
+		eos.getTableRows({
+			"json": true,
+			"scope": 'music2',
+			"code": 'music2',
+			"table": "musics",
+			"limit": 500
+		}).then(result => {console.log(result);
+			});
+
+		return;
+	}
+
+	addMusic(){
+		this.scatter.suggestNetwork(this.network).then(() => {
+
+			const accountName = "music2";
+			const keyProvider = process.env.REACT_APP_PRIVATE_KEY;
+			const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
+			let eos = Eos.Localnet({httpEndpoint, keyProvider});
+			const signProvider = (buf, sign) => {
+				return sign(buf, "5J9wkAzVnMSBha1hPnQZX7vAHmbaVLFhd7NJXfejPRiQzTHHo1T")
+			};
+		
+			const options = {
+				authorization: [
+					"music2@active",
+					"music2@owner"
+				]
+			};
+
+			eos.contract('music2', {signProvider}).then(contract => {
+				contract.addmusic('anywhere', 'mcthemax', 'hashvalue2', accountName, options).then((result) => {console.log(result)})
+			}).catch(e => {
+				console.log('error', e);
+			}) 
+		})
+		return;
+	}
 
 	logic() {
 		document.addEventListener('scatterLoaded', () => {
@@ -109,15 +151,16 @@ class App extends Component {
 			eos.getBlock(1).then((result) => {
 				console.log(result);
 			});			
-
-			this.createAccount();
+			//this.addMusic();
+			//this.createAccount();
+			this.searchMusics();
 		})
 		return;
 	}
 
 
 	render() {
-    	//this.logic();
+    	this.logic();
 		return (
 			<div className="App">
 				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
