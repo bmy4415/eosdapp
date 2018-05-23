@@ -5,7 +5,6 @@ import { CONTRACT_NAME, KEY_PROVIDER_PRIVATE_KEY, LOCAL_NETWORK_HOST, LOCAL_NETW
 import * as Eos from 'eosjs';
 
 class AddMusicComponent extends Component {
-
 	state = {
 		ipfsHash:null,
 		buffer:'',
@@ -26,10 +25,11 @@ class AddMusicComponent extends Component {
 		};
 		
 		eos.contract(CONTRACT_NAME).then(contract => {
-			contract.addmusic('anywhere', 'mcthemax', this.state.ipfsHash, account.name, options).then(result => {
+			contract.addmusic(this.state.musicName, this.state.singer, this.state.ipfsHash, account.name, options).then(result => {
 				this.props.onAddMusic(result.transaction_id, this.state.ipfsHash);
 				this.props.onBusyEnd();
 				console.log(this.props.statefunction);
+				console.log(this.state);
 			})
 		})
 	}
@@ -52,7 +52,20 @@ class AddMusicComponent extends Component {
 		let reader = new window.FileReader()
 		reader.readAsArrayBuffer(file)
 		reader.onloadend = () => this.convertToBuffer(reader)
-	};  
+	};
+
+	captureMusicName = (event) => {
+		event.stopPropagation()
+		event.preventDefault()
+		this.setState({musicName : event.target.value});
+	}
+
+	captureSinger = (event) => {
+		event.stopPropagation()
+		event.preventDefault()
+		this.setState({singer : event.target.value});
+	}
+
 
 	convertToBuffer = async (reader) => {
 		//file is converted to a buffer for upload to IPFS
@@ -70,6 +83,16 @@ class AddMusicComponent extends Component {
 				<Grid>
 					<h3> Choose file to send to IPFS </h3>
 					<Form onSubmit={this.onSubmit}>
+						<label>
+							Music Name 
+							<input type="text" onChange = {this.captureMusicName} />
+						</label>
+						<br/>
+						<label>
+							Singer 
+							<input type="text" onChange = {this.captureSinger} />
+						</label>
+						<br/>
 						<input type = "file" onChange = {this.captureFile}/>
 						<Button	bsStyle="primary" type="submit">
 							Send it
