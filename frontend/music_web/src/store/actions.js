@@ -26,3 +26,16 @@ export const initScatter = (scatter, scatter_eos) => {
 	}
 }
 
+export const setMusicsTable = (musicsTable) => {
+	return {
+		type : "SET_MUSICS_TABLE",
+		musicsTable : musicsTable,
+	}
+}
+
+export const setCurrentMusicSrc = (sourceUrl) => {
+	return {
+		type : "SET_CURRENT_MUSIC",
+		sourceUrl : sourceUrl,
+	}
+}

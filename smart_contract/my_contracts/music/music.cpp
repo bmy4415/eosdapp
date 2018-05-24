@@ -25,6 +25,7 @@ class musicDapp : public eosio::contract {
 					  a.music_name = music_name;
 					  a.singer = singer;
 					  a.ipfs_hash = ipfs_hash;
+					  a.ipfs_hash_str = ipfs_hash_str;
 					  a.identity_account = identity_account;
 					  });
 			  eosio::print("======== music added! ========\n");
@@ -50,13 +51,14 @@ class musicDapp : public eosio::contract {
 	  // @abi table musics i64
 	  struct musics {
 		  hash ipfs_hash; // use this as index
+		  string ipfs_hash_str;
 		  string music_name;
 		  string singer;
 		  account_name identity_account;
 
 		  hash primary_key()const { return ipfs_hash; }
 		  
-		  EOSLIB_SERIALIZE( musics, (ipfs_hash)(music_name)(singer)(identity_account) )
+		  EOSLIB_SERIALIZE( musics, (ipfs_hash)(ipfs_hash_str)(music_name)(singer)(identity_account) )
 	  };
 
 	  static hash stringToHash(string str){

@@ -20,10 +20,19 @@ const reducer = (state = initialState, action) => {
 
 		case "ADD_MUSIC":
 			return Object.assign({}, state, {
-				busy : false,
 				addMusicIsSuccess : true,
 				addMusicSuccessTxID : action.txID,
 				addMusicSuccessIPFS : action.ipfsHash,
+            });
+
+		case "SET_MUSICS_TABLE":
+			return Object.assign({}, state, {
+				searchResultList : action.musicsTable,
+            });
+
+		case "SET_CURRENT_MUSIC":
+			return Object.assign({}, state, {
+				currentMusicSrc : action.sourceUrl,
             });
 
 		default:

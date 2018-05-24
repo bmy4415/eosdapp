@@ -3,9 +3,9 @@ export const initialState =
 		scatter : null,
 		scatter_eos : null,
 		busy : false,
-		currentMusic : null,
-		searchResultList : null,
+		currentMusicSrc : '', // source url of currentMusic
+		searchResultList : [],
 		addMusicIsSuccess : false,
-		addMusicSuccessTxID : null,
-		addMusicSuccessIPFS : null,
+		addMusicSuccessTxID : '',
+		addMusicSuccessIPFS : '',
 	} 

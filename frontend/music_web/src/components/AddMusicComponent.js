@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Grid, Form, Button } from 'react-bootstrap';
 import ipfs from '../ipfs.js';
-import { CONTRACT_NAME, KEY_PROVIDER_PRIVATE_KEY, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
+import { CONTRACT_OWNER_PKEY, CONTRACT_NAME, KEY_PROVIDER_PRIVATE_KEY, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
 import * as Eos from 'eosjs';
 
 class AddMusicComponent extends Component {
+	/* state */
 	state = {
 		ipfsHash:null,
 		buffer:'',
@@ -12,6 +13,11 @@ class AddMusicComponent extends Component {
 		singer:'',
 	};
 	
+
+	/*
+	 * function that add music to Eos smart contract table
+	 */
+
 	addMusicToEos() {
 		const account = this.props.statefunction.scatter.identity.accounts.find(account => account.blockchain === 'eos');
 		const keyProvider = KEY_PROVIDER_PRIVATE_KEY;
@@ -21,30 +27,57 @@ class AddMusicComponent extends Component {
 		const options = {
 			authorization: [
 				`${account.name}@${account.authority}`,
+				`${CONTRACT_NAME}@active`
 			]
 		};
+		console.log(this.props.statefunction.scatter.identity);
+		const signProvider = (buf, sign) => {
+			return sign(buf, CONTRACT_OWNER_PKEY)
+		};
 		
-		eos.contract(CONTRACT_NAME).then(contract => {
+		
+		// call addmusic action in our smart contract.
+		// TODO:
+		// notice!! "eos" should be replaced with 
+		// "this.props.statefunction.scatter_eos"
+		// for dawn4
+
+		eos.contract(CONTRACT_NAME, {signProvider}).then(contract => {
+			console.log(this.state.ipfsHash);
 			contract.addmusic(this.state.musicName, this.state.singer, this.state.ipfsHash, account.name, options).then(result => {
-				this.props.onAddMusic(result.transaction_id, this.state.ipfsHash);
+				this.props.onAddMusic(result.transaction_id, this.state.ipfsHash);//this is for success message
+
+				//clear input components
+				this.setState({musicName : ''});
+				this.setState({singer: ''});
+				this.refs.fileInput.value = '';
+
+				//stop loading spinner
 				this.props.onBusyEnd();
 				console.log(this.props.statefunction);
-				console.log(this.state);
 			})
 		})
 	}
 	
 
+	/*
+	 * when user click the send button, this function will be called
+	 */
 	onSubmit = async (event) => {
 		event.preventDefault();
 		this.props.onBusyStart();
 		console.log(this.props.statefunction);
+
+		// add file to ipfs, and call addMusicToEos with ipfs hash
 		await ipfs.add(this.state.buffer, (err, ipfsHash) => {
 			this.setState({ ipfsHash:ipfsHash[0].hash }); 
 			this.addMusicToEos();
 		}) //await ipfs.add 
 	}; //onSubmit
 
+
+
+	// functions for capturing inputs
 	captureFile = (event) => {
 		event.stopPropagation()
 		event.preventDefault()
@@ -55,14 +88,10 @@ class AddMusicComponent extends Component {
 	};
 
 	captureMusicName = (event) => {
-		event.stopPropagation()
-		event.preventDefault()
 		this.setState({musicName : event.target.value});
 	}
 
 	captureSinger = (event) => {
-		event.stopPropagation()
-		event.preventDefault()
 		this.setState({singer : event.target.value});
 	}
 
@@ -81,19 +110,19 @@ class AddMusicComponent extends Component {
 			<div className="AddMusicComponent">
 				<hr/>
 				<Grid>
-					<h3> Choose file to send to IPFS </h3>
+					<h3> Choose file to upload </h3>
 					<Form onSubmit={this.onSubmit}>
 						<label>
 							Music Name 
-							<input type="text" onChange = {this.captureMusicName} />
+							<input type="text" onChange = {this.captureMusicName} value = {this.state.musicName} />
 						</label>
 						<br/>
 						<label>
 							Singer 
-							<input type="text" onChange = {this.captureSinger} />
+							<input type="text" onChange = {this.captureSinger} value = {this.state.singer} />
 						</label>
 						<br/>
-						<input type = "file" onChange = {this.captureFile}/>
+						<input type = "file" onChange = {this.captureFile} ref="fileInput" />
 						<Button	bsStyle="primary" type="submit">
 							Send it
 						</Button>

@@ -4,17 +4,25 @@ import AddMusicComponent from './containers/AddMusicComponent.js'
 import * as Eos from 'eosjs';
 import { LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from './global.js';
 import { Dimmer, Loader } from 'semantic-ui-react'
+import SearchComponent from './containers/SearchComponent.js'
+import ListComponent from './containers/ListComponent.js'
+import MusicPlayerComponent from './containers/MusicPlayerComponent.js'
 
 class App extends Component {
 
+	/*
+	 * function for initializing "scatter" and "scatter_eos" variable in store
+	 */
 	initScatter() {
 		document.addEventListener('scatterLoaded', () => {
 			this.props.onBusyStart();
 			this.scatter = window.scatter;
-			window.scatter = null;      
-			//scatter.authenticate()
-			//      .then(res => console.log('auth res', res))
-			//      .catch(err => console.log('auth err', err))
+			window.scatter = null;     
+		/*	this.scatter.authenticate()
+				.then(res => {console.log('auth res', res);
+						this.sig = res;})
+				.catch(err => console.log('auth err', err));
+		*/	
 			const host = LOCAL_NETWORK_HOST;
 			const port = LOCAL_NETWORK_PORT;
 			this.network = { blockchain:'eos', host, port };
@@ -26,6 +34,8 @@ class App extends Component {
 		})
 	}
 
+
+	// if busy state is true, loading spinner appears
 	render() {
 		this.initScatter();
 		return (
@@ -37,7 +47,10 @@ class App extends Component {
                       <Loader size="big" inline="centered" content  ="Loading.."/>
 					</Dimmer> : null }
 			
+				<MusicPlayerComponent/>
 				<AddMusicComponent/>
+				<SearchComponent/>
+				<ListComponent/>
 			</div>
 		);
 	}
