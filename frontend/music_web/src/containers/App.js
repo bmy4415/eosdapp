@@ -17,8 +17,8 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch(busyEnd())
 		},
 
-		onInitScatter : (scatter, scatter_eos) => {
-			dispatch(initScatter(scatter, scatter_eos))
+		onInitScatter : (scatter, scatter_eos, identity) => {
+			dispatch(initScatter(scatter, scatter_eos, identity))
 		},
 	}
 }

@@ -7,6 +7,8 @@ import { Dimmer, Loader } from 'semantic-ui-react'
 import SearchComponent from './containers/SearchComponent.js'
 import ListComponent from './containers/ListComponent.js'
 import MusicPlayerComponent from './containers/MusicPlayerComponent.js'
+import CreateAccountComponent from './containers/CreateAccountComponent.js'
+
 
 class App extends Component {
 
@@ -28,9 +30,12 @@ class App extends Component {
 			this.network = { blockchain:'eos', host, port };
 			const eosOptions = {};
 			this.scatter_eos = this.scatter.eos( this.network, Eos.Localnet, eosOptions );
-			this.props.onInitScatter(this.scatter, this.scatter_eos);
-			this.props.onBusyEnd();
-			this.scatter.suggestNetwork(this.network);
+			this.scatter.getIdentity({ accounts:[this.network] }).then(id => { 
+				this.identity = id;
+				this.props.onInitScatter(this.scatter, this.scatter_eos, this.identity);
+				this.props.onBusyEnd();
+
+			})
 		})
 	}
 
@@ -51,6 +56,7 @@ class App extends Component {
 				<AddMusicComponent/>
 				<SearchComponent/>
 				<ListComponent/>
+				<CreateAccountComponent/>
 			</div>
 		);
 	}

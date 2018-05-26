@@ -18,11 +18,12 @@ export const addMusic = (txID, ipfsHash) => {
 	}
 }
 
-export const initScatter = (scatter, scatter_eos) => {
+export const initScatter = (scatter, scatter_eos, identity) => {
 	return {
 		type : "INIT_SCATTER",
 		scatter : scatter,
 		scatter_eos : scatter_eos,
+		identity : identity,
 	}
 }
 

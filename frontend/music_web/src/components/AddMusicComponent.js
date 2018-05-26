@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Grid, Form, Button } from 'react-bootstrap';
 import ipfs from '../ipfs.js';
-import { CONTRACT_OWNER_PKEY, CONTRACT_NAME, KEY_PROVIDER_PRIVATE_KEY, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
-import * as Eos from 'eosjs';
+import { CONTRACT_OWNER_PKEY, CONTRACT_NAME/*, KEY_PROVIDER_PRIVATE_KEY, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT*/ } from '../global.js'; 
+//import * as Eos from 'eosjs';
 
 class AddMusicComponent extends Component {
 	/* state */
@@ -19,12 +19,14 @@ class AddMusicComponent extends Component {
 	 */
 
 	addMusicToEos() {
+		// TODO:here need getIdentity call and get account from there
 		const account = this.props.statefunction.scatter.identity.accounts.find(account => account.blockchain === 'eos');
-		const keyProvider = KEY_PROVIDER_PRIVATE_KEY;
+	/*	const keyProvider = KEY_PROVIDER_PRIVATE_KEY;
 		const httpEndpoint = `http://${LOCAL_NETWORK_HOST}:${LOCAL_NETWORK_PORT}`;
 		let eos = Eos.Localnet({httpEndpoint, keyProvider});
-
+*/
 		const options = {
+			chainId : '706a7ddd808de9fc2b8879904f3b392256c83104c1d544b38302cc07d9fca477',
 			authorization: [
 				`${account.name}@${account.authority}`,
 				`${CONTRACT_NAME}@active`
@@ -42,8 +44,9 @@ class AddMusicComponent extends Component {
 		// "this.props.statefunction.scatter_eos"
 		// for dawn4
 
-		eos.contract(CONTRACT_NAME, {signProvider}).then(contract => {
+		this.props.statefunction.scatter_eos.contract(CONTRACT_NAME).then(contract => {
 			console.log(this.state.ipfsHash);
+			console.log(contract);
 			contract.addmusic(this.state.musicName, this.state.singer, this.state.ipfsHash, account.name, options).then(result => {
 				this.props.onAddMusic(result.transaction_id, this.state.ipfsHash);//this is for success message
 

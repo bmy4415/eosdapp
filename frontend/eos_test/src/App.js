@@ -12,8 +12,8 @@ class App extends Component {
 	state = {
 		ipfsHash:null,
 		buffer:'',
-		busy:false,
-	};
+		busy:true,
+	};	
 
 	onSubmit = async (event) => {
 		event.preventDefault();
@@ -72,6 +72,7 @@ class App extends Component {
 					recovery: stakerName,
 					deposit: `1 EOS`
 				}).then(account => {
+					console.log(account);
 					this.scatter.getIdentity({ accounts:[this.network] })
 						.then(id => {
 							console.log(this.scatter)
@@ -135,9 +136,11 @@ class App extends Component {
 		return;
 	}
 
-	logic() {
+
+	logic = () => {
 		document.addEventListener('scatterLoaded', () => {
 			//window.scatter.requireVersion();
+			this.setState({busy:true});
 			this.scatter = window.scatter;
 			window.scatter = null;		  
 			//scatter.authenticate()
@@ -150,11 +153,15 @@ class App extends Component {
 			const eos = this.scatter.eos( this.network, Eos.Localnet, eosOptions );
 			eos.getBlock(1).then((result) => {
 				console.log(result);
-			});			
+			});
+			this.setState({busy:false});
 			//this.addMusic();
-			//this.createAccount();
-			this.searchMusics();
-		})
+			this.createAccount();
+			//this.searchMusics();
+		}
+		)
+		console.log(this.state);
+		console.log(this.scatter, this.network);
 		return;
 	}
 

@@ -16,6 +16,7 @@ const reducer = (state = initialState, action) => {
 			return Object.assign({}, state, {
 				scatter : action.scatter,
 				scatter_eos : action.scatter_eos,
+				identity : action.identity,
             });
 
 		case "ADD_MUSIC":

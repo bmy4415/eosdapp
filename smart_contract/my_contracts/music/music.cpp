@@ -15,8 +15,9 @@ class musicDapp : public eosio::contract {
       // @abi action
 
 	  void addmusic( string music_name, string singer, string ipfs_hash_str, account_name identity_account ) {
+		  require_auth(identity_account);
 		  TABLE_Musics _musics(_self, _self);
-
+		
 		  hash ipfs_hash = stringToHash(ipfs_hash_str);
 		  auto record = _musics.find( ipfs_hash );
 		  if(record == _musics.end())
