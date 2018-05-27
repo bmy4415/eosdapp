@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Grid, Form, Button } from 'react-bootstrap';
 import ipfs from '../ipfs.js';
-import { CONTRACT_OWNER_PKEY, CONTRACT_NAME/*, KEY_PROVIDER_PRIVATE_KEY, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT*/ } from '../global.js'; 
-//import * as Eos from 'eosjs';
+import { KEY_PROVIDER_PRIVATE_KEY, CONTRACT_OWNER_PKEY, CONTRACT_NAME, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
+import * as Eos from 'eosjs';
 
 class AddMusicComponent extends Component {
 	/* state */
@@ -19,47 +19,50 @@ class AddMusicComponent extends Component {
 	 */
 
 	addMusicToEos() {
-		// TODO:here need getIdentity call and get account from there
-		const account = this.props.statefunction.scatter.identity.accounts.find(account => account.blockchain === 'eos');
-	/*	const keyProvider = KEY_PROVIDER_PRIVATE_KEY;
-		const httpEndpoint = `http://${LOCAL_NETWORK_HOST}:${LOCAL_NETWORK_PORT}`;
-		let eos = Eos.Localnet({httpEndpoint, keyProvider});
-*/
-		const options = {
-			chainId : '706a7ddd808de9fc2b8879904f3b392256c83104c1d544b38302cc07d9fca477',
-			authorization: [
-				`${account.name}@${account.authority}`,
-				`${CONTRACT_NAME}@active`
-			]
-		};
-		console.log(this.props.statefunction.scatter.identity);
-		const signProvider = (buf, sign) => {
-			return sign(buf, CONTRACT_OWNER_PKEY)
-		};
+		this.network = { blockchain:'eos', host:LOCAL_NETWORK_HOST, port:LOCAL_NETWORK_PORT,};
+		this.props.statefunction.scatter.getIdentity({ accounts:[this.network] }).then(id => { 
+			console.log(id.accounts);
+			const account = id.accounts.find(account => account.blockchain === 'eos');
+			const keyProvider = KEY_PROVIDER_PRIVATE_KEY;
+			const httpEndpoint = `http://${LOCAL_NETWORK_HOST}:${LOCAL_NETWORK_PORT}`;
+			let eos = Eos.Localnet({httpEndpoint, keyProvider});
 		
-		
-		// call addmusic action in our smart contract.
-		// TODO:
-		// notice!! "eos" should be replaced with 
-		// "this.props.statefunction.scatter_eos"
-		// for dawn4
+			const options = {
+				authorization: [
+				//TODO: consider adding this when scatter error is resolved
+				//	`${account.name}@${account.authority}`,
+					`${CONTRACT_NAME}@active`
+				],
+			};
+			console.log(this.props.statefunction.scatter.identity);
 
-		this.props.statefunction.scatter_eos.contract(CONTRACT_NAME).then(contract => {
-			console.log(this.state.ipfsHash);
-			console.log(contract);
-			contract.addmusic(this.state.musicName, this.state.singer, this.state.ipfsHash, account.name, options).then(result => {
-				this.props.onAddMusic(result.transaction_id, this.state.ipfsHash);//this is for success message
+			const signProvider = (buf, sign) => {
+				return sign(buf, CONTRACT_OWNER_PKEY)
+			};
 
-				//clear input components
-				this.setState({musicName : ''});
-				this.setState({singer: ''});
-				this.refs.fileInput.value = '';
+			//TODO: Using this statement is better. But There is unknown error with scatter. 
+			//this.props.statefunction.scatter_eos.contract(CONTRACT_NAME, {signProvider}).then(contract => {
+			
+			eos.contract(CONTRACT_NAME, {signProvider}).then(contract => {
+				console.log(this.state.ipfsHash);
+				console.log(contract);
 
-				//stop loading spinner
-				this.props.onBusyEnd();
-				console.log(this.props.statefunction);
+				contract.addmusic(this.state.musicName, this.state.singer, this.state.ipfsHash, account.name, options).then(result => {
+					this.props.onAddMusic(result.transaction_id, this.state.ipfsHash);//this is for success message
+
+					//clear input components
+					this.setState({musicName : ''});
+					this.setState({singer: ''});
+					this.refs.fileInput.value = '';
+					
+					this.props.statefunction.scatter.forgetIdentity();
+
+					//stop loading spinner
+					this.props.onBusyEnd();
+					console.log(this.props.statefunction);
+				})
 			})
-		})
+		})	
 	}
 	
 

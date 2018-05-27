@@ -8,7 +8,7 @@ import SearchComponent from './containers/SearchComponent.js'
 import ListComponent from './containers/ListComponent.js'
 import MusicPlayerComponent from './containers/MusicPlayerComponent.js'
 import CreateAccountComponent from './containers/CreateAccountComponent.js'
-
+import AddNetworkComponent from './containers/AddNetworkComponent.js'
 
 class App extends Component {
 
@@ -24,18 +24,14 @@ class App extends Component {
 				.then(res => {console.log('auth res', res);
 						this.sig = res;})
 				.catch(err => console.log('auth err', err));
-		*/	
-			const host = LOCAL_NETWORK_HOST;
-			const port = LOCAL_NETWORK_PORT;
-			this.network = { blockchain:'eos', host, port };
+		*/
+
+			this.network = { blockchain:'eos', host:LOCAL_NETWORK_HOST, port:LOCAL_NETWORK_PORT, chainId:1 || 'abcd', };
 			const eosOptions = {};
 			this.scatter_eos = this.scatter.eos( this.network, Eos.Localnet, eosOptions );
-			this.scatter.getIdentity({ accounts:[this.network] }).then(id => { 
-				this.identity = id;
-				this.props.onInitScatter(this.scatter, this.scatter_eos, this.identity);
-				this.props.onBusyEnd();
+			this.props.onInitScatter(this.scatter, this.scatter_eos);
+			this.props.onBusyEnd();
 
-			})
 		})
 	}
 
@@ -51,7 +47,8 @@ class App extends Component {
 					<Dimmer active>
                       <Loader size="big" inline="centered" content  ="Loading.."/>
 					</Dimmer> : null }
-			
+		
+				<AddNetworkComponent/>
 				<MusicPlayerComponent/>
 				<AddMusicComponent/>
 				<SearchComponent/>

@@ -23,7 +23,6 @@ export const initScatter = (scatter, scatter_eos, identity) => {
 		type : "INIT_SCATTER",
 		scatter : scatter,
 		scatter_eos : scatter_eos,
-		identity : identity,
 	}
 }
 

@@ -1,5 +1,5 @@
-import App from '../App.js'
-import { initScatter, busyStart, busyEnd } from '../store/actions.js'
+import AddNetworkComponent from '../components/AddNetworkComponent.js'
+import { busyStart, busyEnd } from '../store/actions.js'
 import { connect } from 'react-redux'
 
 const mapStateToProps = (state) => {
@@ -16,11 +16,7 @@ const mapDispatchToProps = (dispatch) => {
 		onBusyEnd : () => {
 			dispatch(busyEnd())
 		},
-
-		onInitScatter : (scatter, scatter_eos) => {
-			dispatch(initScatter(scatter, scatter_eos))
-		},
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(AddNetworkComponent);
