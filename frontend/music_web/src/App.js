@@ -26,7 +26,7 @@ class App extends Component {
 				.catch(err => console.log('auth err', err));
 		*/
 
-			this.network = { blockchain:'eos', host:LOCAL_NETWORK_HOST, port:LOCAL_NETWORK_PORT, chainId:1 || 'abcd', };
+			this.network = { blockchain:'eos', host:LOCAL_NETWORK_HOST, port:LOCAL_NETWORK_PORT,};
 			const eosOptions = {};
 			this.scatter_eos = this.scatter.eos( this.network, Eos.Localnet, eosOptions );
 			this.props.onInitScatter(this.scatter, this.scatter_eos);

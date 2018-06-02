@@ -5,7 +5,7 @@ import { LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js';
 class AddNetworkComponent extends Component {
 
 	AddNetworkComponent(){
-		this.network = { blockchain:'eos', host:LOCAL_NETWORK_HOST, port:LOCAL_NETWORK_PORT, };
+		this.network = { blockchain:'eos', host:LOCAL_NETWORK_HOST, port:LOCAL_NETWORK_PORT,};
 		this.props.statefunction.scatter.suggestNetwork(this.network).then(()=>
 			{
 				this.props.onBusyEnd();

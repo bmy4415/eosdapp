@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Form, Button } from 'react-bootstrap';
 import ipfs from '../ipfs.js';
-import { KEY_PROVIDER_PRIVATE_KEY, CONTRACT_OWNER_PKEY, CONTRACT_NAME, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
-import * as Eos from 'eosjs';
+import { CONTRACT_NAME, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
 
 class AddMusicComponent extends Component {
 	/* state */
@@ -23,27 +22,15 @@ class AddMusicComponent extends Component {
 		this.props.statefunction.scatter.getIdentity({ accounts:[this.network] }).then(id => { 
 			console.log(id.accounts);
 			const account = id.accounts.find(account => account.blockchain === 'eos');
-			const keyProvider = KEY_PROVIDER_PRIVATE_KEY;
-			const httpEndpoint = `http://${LOCAL_NETWORK_HOST}:${LOCAL_NETWORK_PORT}`;
-			let eos = Eos.Localnet({httpEndpoint, keyProvider});
 		
 			const options = {
 				authorization: [
-				//TODO: consider adding this when scatter error is resolved
-				//	`${account.name}@${account.authority}`,
-					`${CONTRACT_NAME}@active`
+					`${account.name}@${account.authority}`,
 				],
 			};
 			console.log(this.props.statefunction.scatter.identity);
 
-			const signProvider = (buf, sign) => {
-				return sign(buf, CONTRACT_OWNER_PKEY)
-			};
-
-			//TODO: Using this statement is better. But There is unknown error with scatter. 
-			//this.props.statefunction.scatter_eos.contract(CONTRACT_NAME, {signProvider}).then(contract => {
-			
-			eos.contract(CONTRACT_NAME, {signProvider}).then(contract => {
+			this.props.statefunction.scatter_eos.contract(CONTRACT_NAME,).then(contract => {
 				console.log(this.state.ipfsHash);
 				console.log(contract);
 

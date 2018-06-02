@@ -23,7 +23,15 @@ class SearchComponent extends Component {
 			"table": TABLE_NAME,
 			"limit": 500
 		}).then(result => {
-			let filteredTable = result.rows.filter((val) => { return val.music_name === this.state.queryMusicName; });
+			let filteredTable = [];
+			if(this.state.queryMusicName === '')
+			{
+				filteredTable = [];
+			}
+			else
+			{
+				filteredTable = result.rows.filter((val) => { return val.music_name.search(new RegExp(this.state.queryMusicName,"i")) !== -1; });
+			}
 			console.log(filteredTable);
 			this.props.onSetMusicsTable(filteredTable);
 			this.props.onBusyEnd();
