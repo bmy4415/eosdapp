@@ -24,10 +24,6 @@ class ListComponent extends Component {
 	render()
 	{
 		return (
-			<div className="ListComponent">
-				<hr/>
-				<Grid>
-					<h3> Search Result </h3>
 					<List> 
 						{this.props.statefunction.searchResultList.map(
 						(music) =>	
@@ -39,9 +35,6 @@ class ListComponent extends Component {
 							</List.Item>
 						)} 
 					</List>
-					<hr/>
-				</Grid>
-			</div>
 		);
 	}
 }

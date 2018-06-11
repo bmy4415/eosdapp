@@ -101,29 +101,25 @@ class AddMusicComponent extends Component {
 	{
 		return (
 			<div className="AddMusicComponent">
-				<hr/>
-				<Grid>
-					<h3> Choose file to upload </h3>
+					<p> Choose file to upload </p>
 					<Form onSubmit={this.onSubmit}>
-						<label>
-							Music Name 
+						<label style={{color: 'grey'}}>
+							Title
 							<input type="text" onChange = {this.captureMusicName} value = {this.state.musicName} />
 						</label>
 						<br/>
-						<label>
-							Singer 
+						<label style={{color: 'grey'}}>
+							Artist
 							<input type="text" onChange = {this.captureSinger} value = {this.state.singer} />
 						</label>
 						<br/>
 						<input type = "file" onChange = {this.captureFile} ref="fileInput" />
 						<Button	bsStyle="primary" type="submit">
-							Send it
+							Upload
 						</Button>
 					</Form>
-					<hr/>
 					{ this.props.statefunction.addMusicIsSuccess ? <h3> Upload success! <br/> TXID = {this.props.statefunction.addMusicSuccessTxID} <br/> IPFS hash = {this.props.statefunction.addMusicSuccessIPFS} </h3> : null }
 					
-				</Grid>
 			</div>
 		);
 	}
