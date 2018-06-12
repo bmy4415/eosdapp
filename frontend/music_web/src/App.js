@@ -78,9 +78,9 @@ class App extends Component {
 									Search any music you want <br /> from EOS blockchain!
                				 	</h3>
 								<SearchComponent />
-								{this.props.statefunction.searchResultList.size !== 0 ?
-									null
-									: <ListComponent />}
+								{this.props.statefunction.searchResultList.size !== 0 
+									? <ListComponent />
+									: null}
 							</div>
 						</div>
 						</section>
