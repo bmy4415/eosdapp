@@ -20,20 +20,6 @@ class AddNetworkComponent extends Component {
 
 	render()
 	{
-/*		
-		return (
-			<div className="AddNetworkComponent">
-				<hr/>
-				<Grid>
-					<h3> If you did not add our network, press this button </h3>
-					<Button	bsStyle="primary" onClick={this.onClickAddNetwork}>
-						Add Network
-					</Button>
-					<hr/>
-				</Grid>
-			</div>
-		);
-*/
 		return (
 			<p> If you did not add our network, 
 				<a href="" onClick={this.onClickAddNetwork} style={{ color: 'skyblue'}}> click</a>

@@ -51,18 +51,21 @@ class CreateAccountComponent extends Component {
 	{
 		return (
 					<Form onSubmit={this.onSubmit}>
-						<label>
-							Account Name 
-							<input type="text" onChange = {this.captureAccountName} value = {this.state.inputAccountName}/>
-						</label>
-						<label>
-							Public Key 
-							<input type="text" onChange = {this.capturePublicKey} value = {this.state.inputPublicKey}/>
-						</label>
-
-						<Button	bsStyle="primary" type="submit">
-							Send it
-						</Button>
+						<table align="center">
+							<tr>
+								<td> <label> Account Name </label> </td>
+								<td> <input type="text" onChange = {this.captureAccountName} value = {this.state.inputAccountName}/> </td>
+								<td rowspan="2"> &nbsp;&nbsp;&nbsp;
+									<Button	bsStyle="primary" type="submit" style={{}}>
+										Create
+									</Button>
+								</td>
+							</tr>
+							<tr>
+								<td> <label> Public Key </label> </td>
+								<td> <input type="text" onChange = {this.capturePublicKey} value = {this.state.inputPublicKey}/> </td>
+							</tr>
+						</table>
 					</Form>
 		);
 	}

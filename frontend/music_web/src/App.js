@@ -75,19 +75,21 @@ class App extends Component {
 							<div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
 
 								<h3 class="content-subhead">
-									Search any music you want <br /> from EOS blockchain!
+									Search any music you want from EOS blockchain!<br />
                				 	</h3>
+								<p> search by music title </p>
 								<SearchComponent />
 								{this.props.statefunction.searchResultList.size === 0 ?
 									null
 									: <ListComponent />}
 							</div>
+							<br />
 						</div>
 						</section>
 					</div>
 
 					<div class="ribbon l-box-lrg pure-g">
-						<br /><br />
+						<br /><br /><br />
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
 
 							<h2 class="content-head content-head-ribbon">Upload</h2>
@@ -97,6 +99,8 @@ class App extends Component {
                 			</h3>
 
 							<AddMusicComponent />
+							<h3><br /><br /></h3>
+
 						</div>
 					</div>
 
@@ -112,7 +116,7 @@ class App extends Component {
 									If you don't have any account, create one
 								</h3>
 								<CreateAccountComponent />
-								<br />
+								<h3><br /><br /><br /></h3>
 							</div>
 						</div>
 					</div>

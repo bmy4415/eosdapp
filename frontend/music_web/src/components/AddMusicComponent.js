@@ -103,20 +103,21 @@ class AddMusicComponent extends Component {
 			<div className="AddMusicComponent">
 					<p> Choose file to upload </p>
 					<Form onSubmit={this.onSubmit}>
-						<label style={{color: 'grey'}}>
-							Title
-							<input type="text" onChange = {this.captureMusicName} value = {this.state.musicName} />
-						</label>
-						<br/>
-						<label style={{color: 'grey'}}>
-							Artist
-							<input type="text" onChange = {this.captureSinger} value = {this.state.singer} />
-						</label>
-						<br/>
+						<table align="center">
+							<tr>
+								<td> <label style={{color: 'grey'}}> Title </label> </td>
+								<td> <input type="text" onChange = {this.captureMusicName} value = {this.state.musicName} /> </td>
+								<td rowspan="2"> &nbsp;&nbsp;&nbsp;
+									<Button	bsStyle="primary" type="submit"> Upload </Button> 
+								</td>
+							</tr>
+							<tr>
+								<td> <label style={{color: 'grey'}}> Artist </label> </td>
+								<td> <input type="text" onChange = {this.captureSinger} value = {this.state.singer} /> </td>
+							</tr>
+						</table>
+						<br />
 						<input type = "file" onChange = {this.captureFile} ref="fileInput" />
-						<Button	bsStyle="primary" type="submit">
-							Upload
-						</Button>
 					</Form>
 					{ this.props.statefunction.addMusicIsSuccess ? <h3> Upload success! <br/> TXID = {this.props.statefunction.addMusicSuccessTxID} <br/> IPFS hash = {this.props.statefunction.addMusicSuccessIPFS} </h3> : null }
 					
