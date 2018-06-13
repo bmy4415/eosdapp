@@ -162,6 +162,16 @@ a.pure-button-primary {
  * This is the blue top section that appears on the page.
  */
 
+.fixedloader {
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed !important;
+}
+
 .splash-container {
     background: #1f8dd6;
     z-index: 1;

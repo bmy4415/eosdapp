@@ -42,13 +42,13 @@ class App extends Component {
 		return (
 			<div className="App">
 				<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
-
 				{this.props.statefunction.busy ?
+				<div class="fixedloader">
 					<Dimmer active>
-						<Loader size="big" inline="centered" content="Loading.." />
-					</Dimmer> : null}
-
-
+						<Loader size="big" inline="centered" content="Loading.."/>
+					</Dimmer>
+				</div> : null}
+			
 				<div class="splash-container">
 					<div class="splash" style={{ backgroundcolor: 'transparent' }}>
 						<h1 class="splash-head">MEOSIC</h1>
@@ -78,7 +78,7 @@ class App extends Component {
 									Search any music you want <br /> from EOS blockchain!
                				 	</h3>
 								<SearchComponent />
-								{this.props.statefunction.searchResultList.size !== 0 ?
+								{this.props.statefunction.searchResultList.size === 0 ?
 									null
 									: <ListComponent />}
 							</div>
