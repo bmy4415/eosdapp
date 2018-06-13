@@ -20,6 +20,7 @@ class AddNetworkComponent extends Component {
 
 	render()
 	{
+/*		
 		return (
 			<div className="AddNetworkComponent">
 				<hr/>
@@ -32,6 +33,13 @@ class AddNetworkComponent extends Component {
 				</Grid>
 			</div>
 		);
+*/
+		return (
+			<p> If you did not add our network, 
+				<a href="" onClick={this.onClickAddNetwork} style={{ color: 'skyblue'}}> click</a>
+			</p>
+		);
+
 	}
 }
 

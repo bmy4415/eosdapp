@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Grid, Form, Button } from 'react-bootstrap';
-import { CONTRACT_NAME, TABLE_NAME, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js'; 
+import { CONTRACT_NAME, TABLE_NAME, LOCAL_NETWORK_HOST, LOCAL_NETWORK_PORT } from '../global.js';
 import * as Eos from 'eosjs';
 
 class SearchComponent extends Component {
 	state = {
-		queryMusicName:'',
+		queryMusicName: '',
 	};
 
 
@@ -13,9 +13,9 @@ class SearchComponent extends Component {
 	 * this function get entire table of our smart contract
 	 * and filter table by input musicname
 	 */
-    getMusicsTable(){
+	getMusicsTable() {
 		const httpEndpoint = `http://${LOCAL_NETWORK_HOST}:${LOCAL_NETWORK_PORT}`;
-		const eos = Eos.Localnet({httpEndpoint:httpEndpoint});
+		const eos = Eos.Localnet({ httpEndpoint: httpEndpoint });
 		eos.getTableRows({
 			"json": true,
 			"scope": CONTRACT_NAME,
@@ -24,13 +24,11 @@ class SearchComponent extends Component {
 			"limit": 500
 		}).then(result => {
 			let filteredTable = [];
-			if(this.state.queryMusicName === '')
-			{
+			if (this.state.queryMusicName === '') {
 				filteredTable = [];
 			}
-			else
-			{
-				filteredTable = result.rows.filter((val) => { return val.music_name.search(new RegExp(this.state.queryMusicName,"i")) !== -1; });
+			else {
+				filteredTable = result.rows.filter((val) => { return val.music_name.search(new RegExp(this.state.queryMusicName, "i")) !== -1; });
 			}
 			console.log(filteredTable);
 			this.props.onSetMusicsTable(filteredTable);
@@ -38,7 +36,7 @@ class SearchComponent extends Component {
 			console.log(this.props.statefunction);
 		});
 		return;
-	}       
+	}
 
 	onSubmit = async (event) => {
 		event.preventDefault();
@@ -49,29 +47,18 @@ class SearchComponent extends Component {
 	captureMusicName = (event) => {
 		event.stopPropagation()
 		event.preventDefault()
-		this.setState({queryMusicName : event.target.value});
+		this.setState({ queryMusicName: event.target.value });
 	}
 
-	render()
-	{
+	render() {
 		// need to add list view component
 		return (
-			<div className="SearchComponent">
-				<hr/>
-				<Grid>
-					<h3> Input music name to search </h3>
-					<Form onSubmit={this.onSubmit}>
-						<label>
-							Music Name 
-							<input type="text" onChange = {this.captureMusicName} />
-						</label>
-						<Button	bsStyle="primary" type="submit">
-							Send it
-						</Button>
-					</Form>
-					<hr/>
-				</Grid>
-			</div>
+			<Form onSubmit={this.onSubmit}>
+				<input type="text" onChange={this.captureMusicName} />
+				<Button bsStyle="primary" type="submit">
+					Search
+				</Button>
+			</Form>
 		);
 	}
 }

@@ -50,10 +50,6 @@ class CreateAccountComponent extends Component {
 	render()
 	{
 		return (
-			<div className="CreateAccountComponent">
-				<hr/>
-				<Grid>
-					<h3> Input account name and public key to create </h3>
 					<Form onSubmit={this.onSubmit}>
 						<label>
 							Account Name 
@@ -68,9 +64,6 @@ class CreateAccountComponent extends Component {
 							Send it
 						</Button>
 					</Form>
-					<hr/>
-				</Grid>
-			</div>
 		);
 	}
 }
